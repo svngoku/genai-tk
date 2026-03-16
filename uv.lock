@@ -460,6 +460,28 @@ wheels = [
 ]
 
 [[package]]
+name = "blaxel"
+version = "0.2.44"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "attrs" },
+    { name = "dockerfile-parse" },
+    { name = "httpx" },
+    { name = "mcp" },
+    { name = "pydantic" },
+    { name = "pyjwt" },
+    { name = "python-dateutil" },
+    { name = "pyyaml" },
+    { name = "requests" },
+    { name = "tomli" },
+    { name = "websockets" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/38/6e/4906f8d2aa2a53542099e18df2174a09ab2ceb073cd46ec49edbf2a4c4af/blaxel-0.2.44.tar.gz", hash = "sha256:2b8e485819ae5a3b2621cefa58d657b5782e86891611d8f151e5383ba045f837", size = 380799, upload-time = "2026-03-02T23:54:34.499Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/11/c8/4b750ecf9b9aef28aebaac9209eb58055b67720d68692a54c1e8d066132e/blaxel-0.2.44-py3-none-any.whl", hash = "sha256:e9a046346f7f5dfa09d958854e3f0077e91df85b9e751e831db75fcdd3f87910", size = 583527, upload-time = "2026-03-02T23:54:35.895Z" },
+]
+
+[[package]]
 name = "blis"
 version = "1.3.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1133,6 +1155,15 @@ wheels = [
 ]
 
 [[package]]
+name = "dockerfile-parse"
+version = "2.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/92/df/929ee0b5d2c8bd8d713c45e71b94ab57c7e11e322130724d54f469b2cd48/dockerfile-parse-2.0.1.tar.gz", hash = "sha256:3184ccdc513221983e503ac00e1aa504a2aa8f84e5de673c46b0b6eee99ec7bc", size = 24556, upload-time = "2023-07-18T13:36:07.897Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7a/6c/79cd5bc1b880d8c1a9a5550aa8dacd57353fa3bb2457227e1fb47383eb49/dockerfile_parse-2.0.1-py2.py3-none-any.whl", hash = "sha256:bdffd126d2eb26acf1066acb54cb2e336682e1d72b974a40894fac76a4df17f6", size = 14845, upload-time = "2023-07-18T13:36:06.052Z" },
+]
+
+[[package]]
 name = "docstring-parser"
 version = "0.17.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1157,6 +1188,41 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/9d/a4/e44218c2b394e31a6dd0d6b095c4e1f32d0be54c2a4b250032d717647bab/durationpy-0.10.tar.gz", hash = "sha256:1fa6893409a6e739c9c72334fc65cca1f355dbdd93405d30f726deb5bde42fba", size = 3335, upload-time = "2025-05-17T13:52:37.26Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b0/0d/9feae160378a3553fa9a339b0e9c1a048e147a4127210e286ef18b730f03/durationpy-0.10-py3-none-any.whl", hash = "sha256:3b41e1b601234296b4fb368338fdcd3e13e0b4fb5b67345948f4f2bf9868b286", size = 3922, upload-time = "2025-05-17T13:52:36.463Z" },
+]
+
+[[package]]
+name = "e2b"
+version = "2.15.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "attrs" },
+    { name = "dockerfile-parse" },
+    { name = "httpcore" },
+    { name = "httpx" },
+    { name = "packaging" },
+    { name = "protobuf" },
+    { name = "python-dateutil" },
+    { name = "rich" },
+    { name = "typing-extensions" },
+    { name = "wcmatch" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/34/1d/e4a50fbb1ff84f37b8ee1c26f83712f3fc09afa7cad8cec1c7fb616d28b2/e2b-2.15.1.tar.gz", hash = "sha256:a4f1bbc8b5180a8a1098079257fcb73e42503ed546098f676f722f11f0d68c09", size = 139685, upload-time = "2026-03-06T13:34:38.724Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/db/54/c3cc4dc6a8e5ae506af176fd1efbf51a5d0f614c1dba12daa87e481f244c/e2b-2.15.1-py3-none-any.whl", hash = "sha256:a3bc4e004eab51fb05bae44e9ee4fe821e4637260f4ce3064c8f7c6ed7f5a2a0", size = 257003, upload-time = "2026-03-06T13:34:37.192Z" },
+]
+
+[[package]]
+name = "e2b-code-interpreter"
+version = "2.4.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "attrs" },
+    { name = "e2b" },
+    { name = "httpx" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/1e/eb/db6e51edd9f3402fd68d026572579b9b1bd833b10d990376a1e4c05d5b8d/e2b_code_interpreter-2.4.1.tar.gz", hash = "sha256:4b15014ee0d0dfcdc3072e1f409cbb87ca48f48d53d75629b7257e5513b9e7dd", size = 10700, upload-time = "2025-11-26T18:12:38.086Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1b/e7/09b9106ead227f7be14bd97c3181391ee498bb38933b1a9c566b72c8567a/e2b_code_interpreter-2.4.1-py3-none-any.whl", hash = "sha256:15d35f025b4a15033e119f2e12e7ac65657ad2b5a013fa9149e74581fbee778a", size = 13719, upload-time = "2025-11-26T18:12:36.7Z" },
 ]
 
 [[package]]
@@ -1376,30 +1442,54 @@ name = "genai-tk"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "beartype" },
+    { name = "devtools" },
+    { name = "httpx" },
+    { name = "langchain" },
+    { name = "langchain-classic" },
+    { name = "langchain-community" },
+    { name = "langchain-core" },
+    { name = "langchain-openai" },
+    { name = "langgraph" },
+    { name = "langgraph-checkpoint-sqlite" },
+    { name = "loguru" },
+    { name = "omegaconf" },
+    { name = "openai" },
+    { name = "pydantic" },
+    { name = "python-dotenv" },
+    { name = "rich", extra = ["jupyter"] },
+    { name = "typer" },
+    { name = "universal-pathlib" },
+    { name = "xxhash" },
+]
+
+[package.optional-dependencies]
+agents = [
+    { name = "agent-sandbox" },
+    { name = "deepagents" },
+    { name = "deepagents-cli" },
+    { name = "smolagents", extra = ["docker", "litellm", "mcp", "openai", "toolkit"] },
+]
+all = [
     { name = "abbreviations" },
     { name = "agent-sandbox" },
     { name = "baml-cli" },
     { name = "baml-lib" },
-    { name = "beartype" },
     { name = "bm25s" },
     { name = "chonkie" },
     { name = "chromadb" },
+    { name = "daytona" },
     { name = "ddgs" },
     { name = "deepagents" },
     { name = "deepagents-cli" },
-    { name = "devtools" },
+    { name = "e2b-code-interpreter" },
     { name = "en-core-web-lg" },
     { name = "en-core-web-sm" },
     { name = "fuzzysearch" },
-    { name = "httpx" },
     { name = "jinaai" },
     { name = "kuzu" },
-    { name = "langchain" },
     { name = "langchain-anthropic" },
     { name = "langchain-chroma" },
-    { name = "langchain-classic" },
-    { name = "langchain-community" },
-    { name = "langchain-core" },
     { name = "langchain-deepseek" },
     { name = "langchain-experimental" },
     { name = "langchain-google-genai" },
@@ -1409,32 +1499,78 @@ dependencies = [
     { name = "langchain-mcp-adapters" },
     { name = "langchain-mistralai" },
     { name = "langchain-ollama" },
-    { name = "langchain-openai" },
     { name = "langchainhub" },
-    { name = "langgraph" },
-    { name = "langgraph-checkpoint-sqlite" },
     { name = "langserve" },
     { name = "litellm" },
-    { name = "loguru" },
     { name = "markitdown", extra = ["docx", "pdf", "pptx"] },
     { name = "mcp", extra = ["cli"] },
     { name = "mistralai" },
-    { name = "omegaconf" },
-    { name = "openai" },
     { name = "openpyxl" },
     { name = "prefect" },
-    { name = "pydantic" },
-    { name = "python-dotenv" },
     { name = "readabilipy" },
-    { name = "rich", extra = ["jupyter"] },
     { name = "smolagents", extra = ["docker", "litellm", "mcp", "openai", "toolkit"] },
     { name = "spacy" },
     { name = "tavily-python" },
     { name = "tokenizers" },
-    { name = "typer" },
     { name = "unidecode" },
-    { name = "universal-pathlib" },
-    { name = "xxhash" },
+]
+docs = [
+    { name = "markitdown", extra = ["docx", "pdf", "pptx"] },
+    { name = "openpyxl" },
+    { name = "readabilipy" },
+]
+graph = [
+    { name = "baml-cli" },
+    { name = "baml-lib" },
+    { name = "kuzu" },
+    { name = "langchain-kuzu" },
+]
+langchain-extra = [
+    { name = "langchain-experimental" },
+    { name = "langchainhub" },
+    { name = "langserve" },
+]
+mcp = [
+    { name = "langchain-mcp-adapters" },
+    { name = "mcp", extra = ["cli"] },
+]
+nlp = [
+    { name = "abbreviations" },
+    { name = "en-core-web-lg" },
+    { name = "en-core-web-sm" },
+    { name = "spacy" },
+    { name = "tokenizers" },
+    { name = "unidecode" },
+]
+providers = [
+    { name = "langchain-anthropic" },
+    { name = "langchain-deepseek" },
+    { name = "langchain-google-genai" },
+    { name = "langchain-groq" },
+    { name = "langchain-litellm" },
+    { name = "langchain-mistralai" },
+    { name = "langchain-ollama" },
+    { name = "litellm" },
+    { name = "mistralai" },
+]
+rag = [
+    { name = "bm25s" },
+    { name = "chonkie" },
+    { name = "chromadb" },
+    { name = "fuzzysearch" },
+    { name = "langchain-chroma" },
+]
+sandbox = [
+    { name = "daytona" },
+    { name = "e2b-code-interpreter" },
+]
+search = [
+    { name = "ddgs" },
+    { name = "jinaai" },
+    { name = "tavily-python" },
+]
+workflow = [
+    { name = "prefect" },
 ]
 
 [package.dev-dependencies]
@@ -1442,6 +1578,9 @@ autogen = [
     { name = "autogen-agentchat" },
     { name = "autogen-ext", extra = ["openai"] },
     { name = "autogen-openaiext-client" },
+]
+blaxel = [
+    { name = "blaxel" },
 ]
 browser-control = [
     { name = "browser-use-sdk" },
@@ -1471,66 +1610,70 @@ transformers = [
 
 [package.metadata]
 requires-dist = [
-    { name = "abbreviations", specifier = ">=0.2.5" },
-    { name = "agent-sandbox", specifier = ">=0.0.24" },
-    { name = "baml-cli", specifier = ">=0.1.0" },
-    { name = "baml-lib", specifier = ">=0.42.0" },
+    { name = "abbreviations", marker = "extra == 'nlp'", specifier = ">=0.2.5" },
+    { name = "agent-sandbox", marker = "extra == 'agents'", specifier = ">=0.0.24" },
+    { name = "baml-cli", marker = "extra == 'graph'", specifier = ">=0.1.0" },
+    { name = "baml-lib", marker = "extra == 'graph'", specifier = ">=0.42.0" },
     { name = "beartype", specifier = ">=0.21.0" },
-    { name = "bm25s", specifier = ">=0.2.13" },
-    { name = "chonkie", specifier = ">=1.5.2" },
-    { name = "chromadb", specifier = ">=1.0" },
-    { name = "ddgs", specifier = ">=9.7.0" },
-    { name = "deepagents", specifier = ">=0.4" },
-    { name = "deepagents-cli", specifier = ">=0.0.26" },
+    { name = "bm25s", marker = "extra == 'rag'", specifier = ">=0.2.13" },
+    { name = "chonkie", marker = "extra == 'rag'", specifier = ">=1.5.2" },
+    { name = "chromadb", marker = "extra == 'rag'", specifier = ">=1.0" },
+    { name = "daytona", marker = "extra == 'sandbox'", specifier = ">=0.10" },
+    { name = "ddgs", marker = "extra == 'search'", specifier = ">=9.7.0" },
+    { name = "deepagents", marker = "extra == 'agents'", specifier = ">=0.4" },
+    { name = "deepagents-cli", marker = "extra == 'agents'", specifier = ">=0.0.26" },
     { name = "devtools", specifier = ">=0.12.2" },
-    { name = "en-core-web-lg", url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.8.0/en_core_web_lg-3.8.0-py3-none-any.whl" },
-    { name = "en-core-web-sm", url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl" },
-    { name = "fuzzysearch", specifier = ">=0.8.0" },
+    { name = "e2b-code-interpreter", marker = "extra == 'sandbox'", specifier = ">=1.0" },
+    { name = "en-core-web-lg", marker = "extra == 'nlp'", url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.8.0/en_core_web_lg-3.8.0-py3-none-any.whl" },
+    { name = "en-core-web-sm", marker = "extra == 'nlp'", url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl" },
+    { name = "fuzzysearch", marker = "extra == 'rag'", specifier = ">=0.8.0" },
+    { name = "genai-tk", extras = ["providers", "langchain-extra", "agents", "mcp", "rag", "graph", "nlp", "search", "docs", "workflow", "sandbox"], marker = "extra == 'all'" },
     { name = "httpx", specifier = ">=0.28.0" },
-    { name = "jinaai", specifier = ">=0.2.10" },
-    { name = "kuzu", specifier = ">=0.7.1" },
+    { name = "jinaai", marker = "extra == 'search'", specifier = ">=0.2.10" },
+    { name = "kuzu", marker = "extra == 'graph'", specifier = ">=0.7.1" },
     { name = "langchain", specifier = ">=1.0" },
-    { name = "langchain-anthropic", specifier = ">=1.3.4" },
-    { name = "langchain-chroma", specifier = ">=1.0" },
+    { name = "langchain-anthropic", marker = "extra == 'providers'", specifier = ">=1.3.4" },
+    { name = "langchain-chroma", marker = "extra == 'rag'", specifier = ">=1.0" },
     { name = "langchain-classic", specifier = ">=1.0.0" },
     { name = "langchain-community", specifier = ">=0.4" },
     { name = "langchain-core", specifier = ">=1.0" },
-    { name = "langchain-deepseek", specifier = ">=1.0" },
-    { name = "langchain-experimental", specifier = ">=0.0.42" },
-    { name = "langchain-google-genai", specifier = ">=4.2.1" },
-    { name = "langchain-groq", specifier = ">=1.0" },
-    { name = "langchain-kuzu", specifier = ">=0.3.0" },
-    { name = "langchain-litellm", specifier = ">=0.3.2" },
-    { name = "langchain-mcp-adapters", specifier = ">=0.1" },
-    { name = "langchain-mistralai", specifier = ">=1.0" },
-    { name = "langchain-ollama", specifier = ">=1.0" },
+    { name = "langchain-deepseek", marker = "extra == 'providers'", specifier = ">=1.0" },
+    { name = "langchain-experimental", marker = "extra == 'langchain-extra'", specifier = ">=0.0.42" },
+    { name = "langchain-google-genai", marker = "extra == 'providers'", specifier = ">=4.2.1" },
+    { name = "langchain-groq", marker = "extra == 'providers'", specifier = ">=1.0" },
+    { name = "langchain-kuzu", marker = "extra == 'graph'", specifier = ">=0.3.0" },
+    { name = "langchain-litellm", marker = "extra == 'providers'", specifier = ">=0.3.2" },
+    { name = "langchain-mcp-adapters", marker = "extra == 'mcp'", specifier = ">=0.1" },
+    { name = "langchain-mistralai", marker = "extra == 'providers'", specifier = ">=1.0" },
+    { name = "langchain-ollama", marker = "extra == 'providers'", specifier = ">=1.0" },
     { name = "langchain-openai", specifier = ">=1.0" },
-    { name = "langchainhub", specifier = ">=0.1" },
+    { name = "langchainhub", marker = "extra == 'langchain-extra'", specifier = ">=0.1" },
     { name = "langgraph", specifier = ">=1.0" },
     { name = "langgraph-checkpoint-sqlite", specifier = ">=3.0.3" },
-    { name = "langserve", specifier = ">=0.3" },
-    { name = "litellm", specifier = ">=1.74,<2" },
+    { name = "langserve", marker = "extra == 'langchain-extra'", specifier = ">=0.3" },
+    { name = "litellm", marker = "extra == 'providers'", specifier = ">=1.74,<2" },
     { name = "loguru", specifier = ">=0.7.3" },
-    { name = "markitdown", extras = ["pdf", "docx", "pptx"], specifier = ">=0.1.3" },
-    { name = "mcp", extras = ["cli"], specifier = ">=1.4.1" },
-    { name = "mistralai", specifier = ">=1.7.0" },
+    { name = "markitdown", extras = ["pdf", "docx", "pptx"], marker = "extra == 'docs'", specifier = ">=0.1.3" },
+    { name = "mcp", extras = ["cli"], marker = "extra == 'mcp'", specifier = ">=1.4.1" },
+    { name = "mistralai", marker = "extra == 'providers'", specifier = ">=1.7.0" },
     { name = "omegaconf", specifier = ">=2.3.0" },
     { name = "openai", specifier = ">=1.80.0" },
-    { name = "openpyxl", specifier = ">=3.1.5" },
-    { name = "prefect", specifier = ">=3.6.7" },
+    { name = "openpyxl", marker = "extra == 'docs'", specifier = ">=3.1.5" },
+    { name = "prefect", marker = "extra == 'workflow'", specifier = ">=3.6.7" },
     { name = "pydantic", specifier = ">=2.7.0,<3" },
     { name = "python-dotenv", specifier = ">=1.1.1" },
-    { name = "readabilipy", specifier = ">=0.3.0" },
+    { name = "readabilipy", marker = "extra == 'docs'", specifier = ">=0.3.0" },
     { name = "rich", extras = ["jupyter"], specifier = ">=13.9.4" },
-    { name = "smolagents", extras = ["toolkit", "mcp", "openai", "litellm", "docker"], specifier = ">=1.17" },
-    { name = "spacy", specifier = ">=3.7.4" },
-    { name = "tavily-python", specifier = ">=0.7.12" },
-    { name = "tokenizers", specifier = ">=0.21.0" },
+    { name = "smolagents", extras = ["toolkit", "mcp", "openai", "litellm", "docker"], marker = "extra == 'agents'", specifier = ">=1.17" },
+    { name = "spacy", marker = "extra == 'nlp'", specifier = ">=3.7.4" },
+    { name = "tavily-python", marker = "extra == 'search'", specifier = ">=0.7.12" },
+    { name = "tokenizers", marker = "extra == 'nlp'", specifier = ">=0.21.0" },
     { name = "typer", specifier = ">=0.13.0" },
-    { name = "unidecode", specifier = ">=1.3.8" },
+    { name = "unidecode", marker = "extra == 'nlp'", specifier = ">=1.3.8" },
     { name = "universal-pathlib", specifier = ">=0.2.6" },
     { name = "xxhash", specifier = ">=3.6.0" },
 ]
+provides-extras = ["providers", "langchain-extra", "agents", "mcp", "rag", "graph", "nlp", "search", "docs", "workflow", "sandbox", "all"]
 
 [package.metadata.requires-dev]
 autogen = [
@@ -1538,6 +1681,7 @@ autogen = [
     { name = "autogen-ext", extras = ["openai"], specifier = ">=0.4.3" },
     { name = "autogen-openaiext-client", specifier = ">=0.0.3" },
 ]
+blaxel = [{ name = "blaxel", specifier = ">=0.2" }]
 browser-control = [
     { name = "browser-use-sdk", specifier = ">=2.0.4" },
     { name = "playwright", specifier = ">=1.51.0" },
@@ -5232,6 +5376,24 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/be/ba/1f744cdc819428fc6b5084ec34d9b30660f6f9daaf70eead706e3203ec3c/toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f", size = 22253, upload-time = "2020-11-01T01:40:22.204Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/44/6f/7120676b6d73228c96e17f1f794d8ab046fc910d781c8d151120c3f1569e/toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b", size = 16588, upload-time = "2020-11-01T01:40:20.672Z" },
+]
+
+[[package]]
+name = "tomli"
+version = "2.4.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/82/30/31573e9457673ab10aa432461bee537ce6cef177667deca369efb79df071/tomli-2.4.0.tar.gz", hash = "sha256:aa89c3f6c277dd275d8e243ad24f3b5e701491a860d5121f2cdd399fbb31fc9c", size = 17477, upload-time = "2026-01-11T11:22:38.165Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/3c/43/7389a1869f2f26dba52404e1ef13b4784b6b37dac93bac53457e3ff24ca3/tomli-2.4.0-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:920b1de295e72887bafa3ad9f7a792f811847d57ea6b1215154030cf131f16b1", size = 154894, upload-time = "2026-01-11T11:21:56.07Z" },
+    { url = "https://files.pythonhosted.org/packages/e9/05/2f9bf110b5294132b2edf13fe6ca6ae456204f3d749f623307cbb7a946f2/tomli-2.4.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:7d6d9a4aee98fac3eab4952ad1d73aee87359452d1c086b5ceb43ed02ddb16b8", size = 149053, upload-time = "2026-01-11T11:21:57.467Z" },
+    { url = "https://files.pythonhosted.org/packages/e8/41/1eda3ca1abc6f6154a8db4d714a4d35c4ad90adc0bcf700657291593fbf3/tomli-2.4.0-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:36b9d05b51e65b254ea6c2585b59d2c4cb91c8a3d91d0ed0f17591a29aaea54a", size = 243481, upload-time = "2026-01-11T11:21:58.661Z" },
+    { url = "https://files.pythonhosted.org/packages/d2/6d/02ff5ab6c8868b41e7d4b987ce2b5f6a51d3335a70aa144edd999e055a01/tomli-2.4.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:1c8a885b370751837c029ef9bc014f27d80840e48bac415f3412e6593bbc18c1", size = 251720, upload-time = "2026-01-11T11:22:00.178Z" },
+    { url = "https://files.pythonhosted.org/packages/7b/57/0405c59a909c45d5b6f146107c6d997825aa87568b042042f7a9c0afed34/tomli-2.4.0-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:8768715ffc41f0008abe25d808c20c3d990f42b6e2e58305d5da280ae7d1fa3b", size = 247014, upload-time = "2026-01-11T11:22:01.238Z" },
+    { url = "https://files.pythonhosted.org/packages/2c/0e/2e37568edd944b4165735687cbaf2fe3648129e440c26d02223672ee0630/tomli-2.4.0-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:7b438885858efd5be02a9a133caf5812b8776ee0c969fea02c45e8e3f296ba51", size = 251820, upload-time = "2026-01-11T11:22:02.727Z" },
+    { url = "https://files.pythonhosted.org/packages/5a/1c/ee3b707fdac82aeeb92d1a113f803cf6d0f37bdca0849cb489553e1f417a/tomli-2.4.0-cp312-cp312-win32.whl", hash = "sha256:0408e3de5ec77cc7f81960c362543cbbd91ef883e3138e81b729fc3eea5b9729", size = 97712, upload-time = "2026-01-11T11:22:03.777Z" },
+    { url = "https://files.pythonhosted.org/packages/69/13/c07a9177d0b3bab7913299b9278845fc6eaaca14a02667c6be0b0a2270c8/tomli-2.4.0-cp312-cp312-win_amd64.whl", hash = "sha256:685306e2cc7da35be4ee914fd34ab801a6acacb061b6a7abca922aaf9ad368da", size = 108296, upload-time = "2026-01-11T11:22:04.86Z" },
+    { url = "https://files.pythonhosted.org/packages/18/27/e267a60bbeeee343bcc279bb9e8fbed0cbe224bc7b2a3dc2975f22809a09/tomli-2.4.0-cp312-cp312-win_arm64.whl", hash = "sha256:5aa48d7c2356055feef06a43611fc401a07337d5b006be13a30f6c58f869e3c3", size = 94553, upload-time = "2026-01-11T11:22:05.854Z" },
+    { url = "https://files.pythonhosted.org/packages/23/d1/136eb2cb77520a31e1f64cbae9d33ec6df0d78bdf4160398e86eec8a8754/tomli-2.4.0-py3-none-any.whl", hash = "sha256:1f776e7d669ebceb01dee46484485f43a4048746235e683bcdffacdf1fb4785a", size = 14477, upload-time = "2026-01-11T11:22:37.446Z" },
 ]
 
 [[package]]

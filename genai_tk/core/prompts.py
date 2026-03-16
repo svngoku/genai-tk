@@ -21,6 +21,7 @@ Example:
     ... )
 """
 
+from datetime import datetime
 from textwrap import dedent
 
 from langchain_core.prompts import (
@@ -29,6 +30,45 @@ from langchain_core.prompts import (
 )
 
 DEFAULT_SYSTEM_PROMPT = ""
+
+
+def datetime_context() -> str:
+    """Return a single line with the current date and time.
+
+    Intended to be prepended to any agent's system prompt so the model
+    always knows the current time regardless of the framework.
+
+    The format is deliberately human-friendly to avoid the LLM copying it
+    verbatim into tool parameters that expect a specific machine format
+    (e.g. Tavily's ``start_date`` requires ``YYYY-MM-DD``).
+
+    Example:
+        ```python
+        prompt = f"{datetime_context()}\\n\\nYou are a helpful assistant."
+        ```
+    """
+    now_local = datetime.now().astimezone()
+    return (
+        f"Current date: {now_local.strftime('%A, %B %d, %Y')}. "
+        f"Current time: {now_local.strftime('%I:%M %p %Z')}. "
+        "Do not pass this datetime directly as a parameter to any tool; "
+        "use only the format each tool requires."
+    )
+
+
+def with_datetime_context(system_prompt: str | None) -> str:
+    """Prepend ``datetime_context()`` to an existing system prompt.
+
+    Args:
+        system_prompt: Existing prompt text, or None.
+
+    Returns:
+        The datetime line followed by the original prompt (if any).
+    """
+    dt = datetime_context()
+    if system_prompt:
+        return f"{dt}\n\n{system_prompt}"
+    return dt
 
 
 def dedent_ws(text: str) -> str:

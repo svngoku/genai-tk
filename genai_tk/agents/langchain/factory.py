@@ -75,7 +75,6 @@ async def create_langchain_agent(
         all_mcp_servers.extend(extra_mcp_servers)
 
     mcp_tools: list[BaseTool] = []
-    mcp_client = None
     if all_mcp_servers:
         from langchain_mcp_adapters.client import MultiServerMCPClient
 
@@ -83,6 +82,11 @@ async def create_langchain_agent(
         if mcp_servers_dict:
             mcp_client = MultiServerMCPClient(mcp_servers_dict)
             mcp_tools = await mcp_client.get_tools()
+            # Enable graceful error handling on MCP tools so that ToolException
+            # (e.g. Tavily API 400) is returned as an error message to the agent
+            # instead of crashing the entire run.
+            for tool in mcp_tools:
+                tool.handle_tool_error = True
             logger.info(f"Loaded {len(mcp_tools)} tools from {len(mcp_servers_dict)} MCP server(s)")
 
     # 4. Combine all tools
@@ -91,6 +95,9 @@ async def create_langchain_agent(
         all_tools.extend(extra_tools)
 
     logger.info(f"Creating '{profile.name}' agent (type={profile.type}) with {len(all_tools)} tools")
+
+    # 4b. Inject current date/time into system prompt
+    profile = _inject_datetime_context(profile)
 
     # 5. Checkpointer
     checkpointer_cfg = profile.checkpointer or CheckpointerConfig(type="none")
@@ -294,6 +301,16 @@ def _load_skills_as_prompt(skill_dirs: list[str]) -> str | None:
 
     logger.info(f"Loaded {len(sections)} skill(s) as system prompt")
     return "\n\n---\n\n".join(sections)
+
+
+def _inject_datetime_context(profile: AgentProfileConfig) -> AgentProfileConfig:
+    """Prepend the current date/time to the profile's system prompt.
+
+    Returns a shallow copy of the profile so the original config is not mutated.
+    """
+    from genai_tk.core.prompts import with_datetime_context
+
+    return profile.model_copy(update={"system_prompt": with_datetime_context(profile.system_prompt)})
 
 
 def _resolve_skill_dirs(skill_directories: list[str]) -> list[str]:

@@ -19,6 +19,10 @@ GenAI Toolkit provides reusable components, agents, and utilities for building s
 
 ## ✨ Recent Enhancements
 
+- **🚀 High-level Agent API**: `from genai_tk import Agent` — create and run agents in 3 lines, with profile-based or ad-hoc configuration
+- **📦 Modular Dependencies**: Core install is ~20 packages; heavy deps moved to 10 optional extras (`[providers]`, `[agents]`, `[rag]`, `[all]`, etc.)
+- **🔌 One-liner MCP Servers**: `from genai_tk.mcp import expose` — turn any Python function or LangChain tool into an MCP server instantly
+- **🧹 Unified LLM API**: Single clean `get_llm()` function — deprecated parameters and duplicate `get_llm_unified()` removed
 - **🤖 Unified LangChain Agents**: Single `cli agents langchain` command with YAML profiles for `react`, `deep`, and `custom` agent types
 - **📋 YAML-Driven Agent Config**: Middleware, checkpointer, LLM, tools, and MCP servers all configurable per profile with global defaults
 - **📍 Flexible Configuration Discovery**: Automatically finds config files by searching parent directories
@@ -26,59 +30,108 @@ GenAI Toolkit provides reusable components, agents, and utilities for building s
 - **⚙️ Dynamic Path Resolution**: Paths automatically adjust based on project structure
 - **🔄 Environment Switching**: Easy switching between development, testing, production configurations
 - **🔐 Optional Dependencies**: Graceful handling of missing packages (e.g., `langchain_postgres`)
-- **🛠️ Enhanced CLI**: Comprehensive command-line interface with framework-specific tools
-- **🧪 Modular Testing**: Organized unit and integration test structure
-- **🔧 Framework-Specific Tools**: Separate tool ecosystems for LangChain and SmolAgents
 
 ## Installation
 
 ```bash
-# Install with core dependencies
+# Install core only (LangChain + OpenAI — lightweight, ~20 deps)
 uv pip install git+https://github.com/tclatos/genai-tk@main
 
-# Install with all extras  
-uv pip install "genai-tk[extra] @ git+https://github.com/tclatos/genai-tk@main"
+# Install with specific extras
+uv pip install "genai-tk[providers] @ git+https://github.com/tclatos/genai-tk@main"  # All LLM providers
+uv pip install "genai-tk[agents,mcp] @ git+https://github.com/tclatos/genai-tk@main" # Agent frameworks + MCP
+uv pip install "genai-tk[rag] @ git+https://github.com/tclatos/genai-tk@main"         # ChromaDB, BM25, chunking
 
-# Development installation
+# Install everything
+uv pip install "genai-tk[all] @ git+https://github.com/tclatos/genai-tk@main"
+
+# Development installation (all extras included)
 git clone https://github.com/tclatos/genai-tk.git
 cd genai-tk
-uv sync
+uv sync --all-extras
 ```
+
+**Available extras:** `providers`, `langchain-extra`, `agents`, `mcp`, `rag`, `graph`, `nlp`, `search`, `docs`, `workflow`, `all`
 
 ## Quick Start
 
-**Basic Setup**:
+### 🚀 High-level Agent API (recommended)
+
+The fastest way to get a production-ready agent running:
+
 ```python
-from genai_tk.core import LLMFactory, EmbeddingsFactory
-from genai_tk.utils.config_mngr import global_config
+from genai_tk import Agent
 
-# Configuration works from any directory - no setup needed!
-config = global_config()
-
-# Create LLM using configured models
-llm = LLMFactory.create()  # Uses default from config
-# Or specify a model
-llm = LLMFactory.create("gpt_4_openai")
-
-# Create embeddings
-embeddings = EmbeddingsFactory.create()  # Uses default
-```
-
-**Agent Example**:
-```python
-from genai_tk.extra.graphs import CustomReactAgent
-from genai_tk.core import LLMFactory
-
-# Create a ReAct agent
-llm = LLMFactory.create("gpt_4_openai")
-agent = CustomReactAgent(llm=llm)
-
-# Run from anywhere - config auto-discovered!
-result = agent.invoke("What's the weather like today?")
+# From a YAML profile — loads LLM, tools, middleware from config
+agent = Agent("Research")
+result = agent.run("Summarize recent AI news")
 print(result)
+
+# Ad-hoc — no config file needed
+agent = Agent(llm="gpt_41mini@openai", tools=["tavily"])
+result = agent.run("What happened in tech today?")
+
+# Async support
+result = await agent.arun("Explain quantum computing")
+
+# Multi-turn chat
+agent = Agent("Research", chat_mode=True)
+agent.run("What is LangGraph?")
+agent.run("How does it compare to CrewAI?")  # remembers context
 ```
 
-**CLI Usage**:
+### 🔌 One-liner MCP Server
+
+Expose any function or LangChain tool as an MCP server for Claude Desktop, Cursor, or Amp:
+
+```python
+from genai_tk.mcp import expose
+
+def greet(name: str) -> str:
+    """Greet someone by name."""
+    return f"Hello, {name}!"
+
+def add(a: int, b: int) -> int:
+    """Add two numbers."""
+    return a + b
+
+expose("my-tools", tools=[greet, add])  # starts stdio MCP server
+```
+
+Works with LangChain tools too:
+
+```python
+from langchain_core.tools import tool
+from genai_tk.mcp import expose
+
+@tool
+def search_docs(query: str) -> str:
+    """Search documentation."""
+    return f"Results for: {query}"
+
+expose("doc-search", tools=[search_docs])
+```
+
+### Core API
+
+```python
+from genai_tk.core.llm_factory import get_llm
+
+# Create LLM — uses default from config
+llm = get_llm()
+
+# Specify a model
+llm = get_llm(llm="gpt_41mini@openai", streaming=True)
+
+# Use in a chain
+from langchain_core.prompts import ChatPromptTemplate
+prompt = ChatPromptTemplate.from_template("Tell me a joke about {topic}")
+chain = prompt | get_llm()
+result = chain.invoke({"topic": "AI"})
+```
+
+### CLI Usage
+
 ```bash
 # List all configured agent profiles
 cli agents langchain --list
@@ -103,7 +156,8 @@ cli rag create-index my_data/
 cli rag query "What are the main features?"
 ```
 
-**Configuration Management**:
+### Configuration Management
+
 ```python
 from genai_tk.utils.config_mngr import global_config
 
@@ -122,112 +176,83 @@ config.select_config('production')
 
 ```
 genai_tk/
+├── __init__.py              # Package root — exports Agent
+├── agent.py                 # ⭐ High-level Agent API (Agent class)
 ├── agents/                  # Agent implementations
 │   ├── langchain/          # Unified LangChain agent (react | deep | custom)
 │   │   ├── config.py       # Pydantic config models + loader
 │   │   ├── factory.py      # Unified agent factory
 │   │   ├── agent.py        # Shell & direct runner
 │   │   ├── commands.py     # CLI command registration
-│   │   └── rich_middleware.py # Rich console middleware
+│   │   └── middleware/     # Rich console middleware
+│   ├── deepagent/          # DeepAgents integration
+│   ├── deer_flow/          # Deer-flow integration
 │   └── smolagents/         # SmolAgents implementation
 ├── core/                    # Core AI components
-│   ├── llm_factory.py      # LLM creation and management
+│   ├── llm_factory.py      # LLM creation and management (get_llm)
 │   ├── embeddings_factory.py # Embeddings models
 │   ├── embeddings_store.py # Vector databases
-│   ├── deep_agents.py      # Deep agent runtime helpers
 │   ├── cache.py            # Caching utilities
 │   ├── chain_registry.py   # Chain registration system
-│   ├── langgraph_runner.py # LangGraph execution engine
 │   ├── mcp_client.py       # Model Context Protocol client
+│   └── ...
+├── mcp/                     # MCP server tools
+│   ├── quick.py            # ⭐ One-liner expose() and build_server()
+│   ├── server_builder.py   # YAML-based MCP server builder
+│   ├── tool_adapter.py     # LangChain → FastMCP adapter
 │   └── ...
 ├── extra/                   # Extended AI capabilities
 │   ├── graphs/             # Agent graphs (ReAct, SQL, etc.)
 │   ├── loaders/            # Data loaders (OCR, etc.)
 │   ├── retrievers/         # Retrieval components (BM25, etc.)
-│   ├── custom_presidio_anonymizer.py # Data anonymization
-│   ├── gpt_researcher_helper.py # Research assistant
-│   ├── image_analysis.py   # Image processing
+│   ├── rag/                # RAG pipelines
 │   └── ...
 ├── main/                    # CLI and command interface
-│   ├── cli.py              # Main CLI entry point
-│   ├── commands_agents.py  # Agent-related commands
-│   ├── commands_core.py    # Core functionality commands
-│   ├── commands_extra.py   # Extended feature commands
-│   └── commands_rag.py     # RAG-specific commands
+│   └── cli.py              # Main CLI entry point
 ├── tools/                   # Framework-specific tools
 │   ├── langchain/          # LangChain-compatible tools
-│   │   ├── rag_tool_factory.py
-│   │   ├── search_tools_factory.py
-│   │   ├── sql_tool_factory.py
-│   │   └── web_search_tool.py
 │   └── smolagents/         # SmolAgents-compatible tools
-│       ├── browser_use.py
-│       ├── dataframe_tools.py
-│       ├── sql_tools.py
-│       └── yfinance_tools.py
-├── utils/                   # Utilities and helpers
-│   ├── cli/                # CLI utilities
-│   │   ├── langchain_setup.py
-│   │   ├── langgraph_agent_shell.py
-│   │   └── smolagents_shell.py
-│   ├── crew_ai/            # CrewAI utilities
-│   ├── pydantic/           # Pydantic helpers
-│   │   ├── dyn_model_factory.py
-│   │   ├── kv_store.py
-│   │   └── jsonl_store.py
-│   ├── config_mngr.py      # Configuration management
-│   ├── langgraph.py        # LangGraph utilities
-│   └── ...
-└── wip/                     # Work in progress
-    ├── autogen_utils.py
-    ├── browser_use_langchain.py
-    └── structured_output.py
+└── utils/                   # Utilities and helpers
+    ├── config_mngr.py      # Configuration management
+    └── ...
 ```
 
 ## Key Components
 
+### Top-level API
+
+- **`Agent`** (`genai_tk.agent`) - High-level agent with sync/async `.run()` / `.arun()` — wraps the full agent factory
+- **`expose()`** (`genai_tk.mcp`) - One-liner MCP server from functions or LangChain tools
+- **`get_llm()`** (`genai_tk.core.llm_factory`) - Unified LLM creation with fuzzy model resolution
+
 ### Core (`genai_tk.core`)
 
-- **LLM Factory** - Creates Language Models from multiple providers
+- **LLM Factory** - Creates Language Models from multiple providers with fuzzy model resolution
 - **Embeddings Factory** - Provides embeddings for semantic search
-- **Embeddings Store** - Vector database management for RAG
-- **Deep Agents** - Runtime helpers for deep agent execution
-- **MCP Client** - Model Context Protocol integration
+- **Embeddings Store** - Vector database management for RAG (Chroma, InMemory, PgVector)
+- **MCP Client** - Model Context Protocol client integration
 - **Cache** - Intelligent caching system for AI responses
 - **Chain Registry** - Centralized chain registration and discovery
-- **LangGraph Runner** - Execution engine for LangGraph workflows
 
-### Main (`genai_tk.main`)
+### MCP (`genai_tk.mcp`)
 
-- **CLI Interface** - Comprehensive command-line interface
-- **Agent Commands** - Agent management and execution commands
-- **Core Commands** - Core functionality commands
-- **RAG Commands** - RAG pipeline management commands
+- **Quick API** - `expose()` and `build_server()` for instant MCP server creation
+- **Server Builder** - YAML-driven MCP server configuration and startup
+- **Tool Adapter** - Automatic LangChain BaseTool → MCP tool wrapping
+
+### Agents (`genai_tk.agents`)
+
+- **LangChain** - Unified agent factory (react, deep, custom) with YAML profiles
+- **DeepAgents** - Deep agent integration with planning, skills, and backends
+- **SmolAgents** - SmolAgents framework integration
+- **Deer-flow** - ByteDance Deer-flow agent integration
 
 ### Extra (`genai_tk.extra`)
 
 - **Agent Graphs** - ReAct, SQL, and structured output agents
 - **Data Loaders** - OCR (Mistral), document processing
 - **Retrievers** - BM25S and other retrieval components
-- **Presidio Anonymizer** - Data privacy and anonymization
-- **GPT Researcher Helper** - Research assistant integration
-- **Image Analysis** - Image processing and analysis
-- **KV Store Registry** - Key-value store management
-- **PGVector Factory** - PostgreSQL vector database integration
-
-### Tools (`genai_tk.tools`)
-
-- **LangChain Tools** - RAG, search, SQL, and web search tools
-- **SmolAgents Tools** - Browser automation, data analysis, financial tools
-
-### Utils (`genai_tk.utils`)
-
-- **Configuration Manager** - Hierarchical config system with auto-discovery
-- **CLI Utilities** - Shell interfaces for LangChain and SmolAgents
-- **CrewAI Utilities** - CrewAI integration helpers
-- **Pydantic Helpers** - Dynamic models, validation, and data stores
-- **LangGraph Utilities** - LangGraph workflow utilities
-- **Rich Widgets** - Rich console components and displays
+- **RAG Pipelines** - End-to-end RAG workflows with Prefect orchestration
 
 ## Supported AI Providers
 

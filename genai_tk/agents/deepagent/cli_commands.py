@@ -187,6 +187,8 @@ async def _run_tui_async(
         except Exception:
             logger.debug("web_search tool not available (requires TAVILY_API_KEY)")
 
+    from genai_tk.core.prompts import with_datetime_context
+
     model = resolve_model_from_profile(profile, llm_id, config)
 
     async with sandbox_context(profile, config) as sandbox_backend:
@@ -199,7 +201,7 @@ async def _run_tui_async(
                 enable_memory=profile.enable_memory,
                 enable_skills=profile.enable_skills,
                 enable_shell=profile.enable_shell,
-                system_prompt=profile.system_prompt,
+                system_prompt=with_datetime_context(profile.system_prompt),
                 checkpointer=checkpointer,
                 sandbox=sandbox_backend,
             )
@@ -274,6 +276,8 @@ async def _run_task_async(
     shell_allow_list = profile.shell_allow_list
     effective_shell = profile.enable_shell and bool(shell_allow_list)
 
+    from genai_tk.core.prompts import with_datetime_context
+
     model = resolve_model_from_profile(profile, llm_id, config)
 
     if not quiet:
@@ -294,7 +298,7 @@ async def _run_task_async(
                 enable_memory=profile.enable_memory,
                 enable_skills=profile.enable_skills,
                 enable_shell=effective_shell,
-                system_prompt=profile.system_prompt,
+                system_prompt=with_datetime_context(profile.system_prompt),
                 checkpointer=checkpointer,
                 sandbox=sandbox_backend,
             )

@@ -469,6 +469,22 @@ langchain_agents:
         - "Which employee generated the most revenue by country?"
         - "How many customers are from Canada?"
 
+    - name: "E2B Sandbox"
+      type: react
+      description: "Code execution agent with E2B cloud sandbox"
+      pre_prompt: "You are a coding assistant with access to a secure cloud sandbox for executing Python code. Use the code interpreter tool to run code and return results."
+      tools:
+        - factory: genai_tk.tools.langchain.sandbox_tools:e2b_code_interpreter_tool
+        - factory: genai_tk.tools.langchain.search_tools_factory:create_search_function
+      features:
+        - "☁️ E2B Sandbox"
+        - "🐍 Code Execution"
+        - "🔍 Web Search"
+      examples:
+        - "Calculate pi to 100 decimal places using mpmath"
+        - "Generate a plot of sin(x) and return the data points"
+        - "Scrape and parse a CSV from a URL"
+
     - name: "Stock Analysis"
       type: deep
       description: "Financial analyst with stock data tools, web research, and reporting capabilities"

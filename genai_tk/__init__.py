@@ -8,3 +8,12 @@ try:
 except ImportError:
     # Handle case where dependencies aren't installed
     pass
+
+
+# High-level API — lazy import to avoid pulling heavy deps at module load
+def __getattr__(name: str):
+    if name == "Agent":
+        from genai_tk.agent import Agent
+
+        return Agent
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

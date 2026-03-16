@@ -8,6 +8,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **High-level Agent API** (`genai_tk.Agent`)
+  - New `genai_tk/agent.py` with `Agent` class — create and run agents in 3 lines
+  - Profile-based mode: `Agent("Research")` loads LLM, tools, middleware from YAML config
+  - Ad-hoc mode: `Agent(llm="gpt_41mini@openai", tools=["tavily"])` — no config file needed
+  - Sync `.run()` and async `.arun()` wrappers with automatic event-loop handling
+  - `.ainvoke_raw()` for accessing full LangGraph state dict
+  - `.cleanup()` for stopping sandbox backends
+  - Multi-turn chat via `chat_mode=True` with configurable `thread_id`
+  - Lazy agent initialization — factory called only on first invocation, then cached
+  - Lazy `__getattr__` export from `genai_tk/__init__.py` to avoid pulling heavy deps at import
+  - 18 unit tests covering construction, profile/ad-hoc run, caching, cleanup, and top-level import
+
+- **One-liner MCP Server Exposure** (`genai_tk.mcp.expose`)
+  - New `genai_tk/mcp/quick.py` with `expose()` and `build_server()` functions
+  - Accepts any mix of LangChain `BaseTool` instances and plain Python callables
+  - Plain functions auto-registered via FastMCP using their name, docstring, and type annotations
+  - LangChain tools wrapped via existing `tool_adapter.py` infrastructure
+  - Default transport: `stdio` (for Claude Desktop, Cursor, Amp); supports `sse` and `streamable-http`
+  - `build_server()` returns unconfigured `FastMCP` instance for testing/customization
+  - Re-exported from `genai_tk.mcp` package: `from genai_tk.mcp import expose`
+  - 12 unit tests covering plain functions, LangChain tools, mixed lists, transports, and imports
+
 - **Deep Agent Text-to-SQL Example with Progressive Skill Disclosure**
   - New `text2sql` profile: SQL agent for Chinook music database with dynamic skill loading
   - Core identity (role, safety rules, approach) in `system_prompt` YAML field — always present in every LLM call
@@ -69,6 +91,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Console warning when a non-`deep` profile sets an explicit non-none backend
   - `config/basic/agents/langchain.yaml` updated with `backend:` docs and commented examples
   - 20 additional unit tests in `test_config.py` (54 total): `TestBackendConfig`, `TestResolveProfileBackend`, `TestCreateBackend`
+
+### Changed
+- **Dependency slimming** — core `dependencies` reduced from ~60 packages to ~20
+  - Core: pydantic, loguru, typer, omegaconf, rich, langchain, langgraph, langchain-openai, openai
+  - Heavy deps moved to 10 optional extras under `[project.optional-dependencies]`:
+    `providers`, `langchain-extra`, `agents`, `mcp`, `rag`, `graph`, `nlp`, `search`, `docs`, `workflow`
+  - `[all]` meta-extra installs everything: `uv pip install "genai-tk[all]"`
+  - Development: `uv sync --all-extras` to get full environment
+  - Existing code unaffected — all heavy deps already use deferred/lazy imports
+
+- **Unified `get_llm()` API** — single clean function signature
+  - Removed deprecated `llm_id` and `llm_tag` parameters from `get_llm()`
+  - Removed `get_llm_unified()` (was an exact duplicate of `get_llm`)
+  - Callers in `extra/commands_extra.py` and `tests/chains/joke.py` updated to use `get_llm()`
+
+- **README.md** — rewritten Quick Start with Agent API, MCP expose, and updated installation docs
+- **Installation docs** — updated to reflect core vs extras split
+
+### Removed
+- **`genai_tk/wip/` directory** — deleted entirely (all files were dead/abandoned code):
+  - `autogen_utils.py` — unfinished AutoGen bridge, used deprecated params
+  - `browser_use_langchain.py` — experimental browser-use adapter, not imported
+  - `cognee_utils.py` — depended on `cognee` package not in deps
+  - `config_loader.py` — superseded by `agents/langchain/config.py`
+  - `test_structured_output.py` — referenced non-existent `structured_output.py`
+  - `compat/langchain.py` — not imported anywhere
+
+- **Root scratch files** — `copilot_llm.py` and `test_copilot_llm.py` removed (standalone experiments)
 
 ### Fixed
 - **DeerFlow CLI Output Cleanup**

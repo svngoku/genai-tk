@@ -630,12 +630,15 @@ class LlmFactory(BaseModel):
 
     @staticmethod
     def find_llm_id_from_tag(llm_tag: str) -> str:
+        """Look up a config tag (e.g. ``fast_model``) and return the mapped LLM identifier.
+
+        The returned value may itself be a compact alias (``openai/gpt-5-mini@openrouter``)
+        that needs further resolution by ``resolve_llm_identifier``.
+        """
         models = _llm_section().models
         llm_id = models.get_tag(llm_tag) or "default"
         if llm_id == "default":
             raise ValueError(f"Cannot find LLM of type type : '{llm_tag}' (no key found in config file)")
-        if llm_id not in LlmFactory.known_items():
-            raise ValueError(f"Cannot find LLM '{llm_id}' of type : '{llm_tag}'")
         return llm_id
 
     @staticmethod
@@ -663,9 +666,11 @@ class LlmFactory(BaseModel):
         if llm in LlmFactory.known_items():
             return llm
 
-        # Config tag lookup
+        # Config tag lookup — the tag value may itself need resolution (e.g. a compact alias)
         try:
-            return LlmFactory.find_llm_id_from_tag(llm)
+            tag_value = LlmFactory.find_llm_id_from_tag(llm)
+            if tag_value != llm:
+                return LlmFactory.resolve_llm_identifier(tag_value)
         except ValueError:
             pass
 
@@ -1044,8 +1049,6 @@ class LlmFactory(BaseModel):
 
 def get_llm(
     llm: str | None = None,
-    llm_id: str | None = None,
-    llm_tag: str | None = None,
     json_mode: bool = False,
     streaming: bool = False,
     reasoning: bool | None = None,
@@ -1055,9 +1058,7 @@ def get_llm(
     """Create a configured LangChain BaseLanguageModel instance.
 
     Args:
-        llm: Unified LLM identifier (can be either LLM ID or tag) - recommended
-        llm_id: (Deprecated) Unique model identifier (if None, uses default from config)
-        llm_tag: (Deprecated) Tag (type) of model to use (fast_model, smart_model, etc.)
+        llm: Unified LLM identifier (can be either LLM ID or tag)
         json_mode: Whether to force JSON output format (where supported)
         streaming: Whether to enable streaming responses (where supported)
         reasoning: Whether to show reasoning/thinking process (None=default, True=enable, False=disable)
@@ -1072,15 +1073,11 @@ def get_llm(
         # Get default LLM
         llm = get_llm()
 
-        # Get specific model with streaming (recommended)
+        # Get specific model with streaming
         llm = get_llm(llm="gpt_35_openai", streaming=True)
 
-        # Get model by tag (recommended)
+        # Get model by tag
         llm = get_llm(llm="fast_model", temperature=0.7)
-
-        # Deprecated ways (still work but will show warnings)
-        llm = get_llm(llm_id="gpt_35_openai", streaming=True)
-        llm = get_llm(llm_tag="fast_model", temperature=0.7)
 
         # Use in a chain
         from langchain_core.prompts import ChatPromptTemplate
@@ -1088,74 +1085,6 @@ def get_llm(
         prompt = ChatPromptTemplate.from_template("Tell me a joke about {topic}")
         chain = prompt | get_llm(llm="gpt_4o_openai")
         result = chain.invoke({"topic": "AI"})
-        ```
-    """
-    # Show deprecation warnings for old parameters
-    if llm_id is not None:
-        logger.warning(
-            "⚠️  'llm_id' parameter in get_llm() is deprecated. Use 'llm' instead. Example: get_llm(llm='gpt_35_openai')"
-        )
-    if llm_tag is not None:
-        logger.warning(
-            "⚠️  'llm_tag' parameter in get_llm() is deprecated. Use 'llm' instead. Example: get_llm(llm='fast_model')"
-        )
-
-    # Handle deprecated llm_id and llm_tag by converting to unified llm parameter
-    resolved_llm = llm
-    if llm is None and llm_id is not None:
-        resolved_llm = llm_id
-    elif llm is None and llm_tag is not None:
-        resolved_llm = llm_tag
-
-    factory = LlmFactory(
-        llm=resolved_llm,
-        json_mode=json_mode,
-        streaming=streaming,
-        reasoning=reasoning,
-        cache=cache,
-        llm_params=kwargs,
-    )
-    info = f"get LLM:'{factory.llm_id}'"
-    info += " -streaming" if streaming else ""
-    info += " -json_mode" if json_mode else ""
-    info += f" -reasoning: {reasoning}" if reasoning is not None else ""
-    info += f" -cache: {cache}" if cache else ""
-    info += f" -extra: {kwargs}" if kwargs else ""
-    logger.debug(info)
-    return factory.get()
-
-
-def get_llm_unified(
-    llm: str | None = None,
-    json_mode: bool = False,
-    streaming: bool = False,
-    reasoning: bool | None = None,
-    cache: str | CacheMethod | None = None,
-    **kwargs,
-) -> BaseChatModel:
-    """Create a configured LangChain BaseLanguageModel instance using unified LLM parameter.
-
-    Args:
-        llm: Unified LLM identifier (can be either LLM ID or LLM tag)
-        json_mode: Whether to force JSON output format (where supported)
-        streaming: Whether to enable streaming responses (where supported)
-        reasoning: Whether to show reasoning/thinking process (None=default, True=enable, False=disable)
-        cache: cache method ("sqlite", "memory", no"_cache, ..) or "default", or None if no change (global setting)
-        **kwargs: other llm parameters (temperature, max_token, ....)
-
-    Returns:
-        BaseLanguageModel: Configured language model instance
-
-    Examples:
-        ```python
-        # Get default LLM
-        llm = get_llm_unified()
-
-        # Get specific model by ID
-        llm = get_llm_unified(llm="gpt_35_openai", streaming=True)
-
-        # Get model by tag
-        llm = get_llm_unified(llm="fast_model", temperature=0.7)
         ```
     """
     factory = LlmFactory(
@@ -1166,7 +1095,7 @@ def get_llm_unified(
         cache=cache,
         llm_params=kwargs,
     )
-    info = f"get LLM (unified):'{factory.llm_id}'"
+    info = f"get LLM:'{factory.llm_id}'"
     info += " -streaming" if streaming else ""
     info += " -json_mode" if json_mode else ""
     info += f" -reasoning: {reasoning}" if reasoning is not None else ""

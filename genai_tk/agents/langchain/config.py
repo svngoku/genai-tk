@@ -130,6 +130,15 @@ class BackendConfig(BaseModel):
             MY_VAR: "1"
         ```
 
+    ``daytona``
+        A Daytona cloud sandbox backend.  Requires the ``daytona`` package
+        and a ``DAYTONA_API_KEY`` environment variable (or ``api_key`` field):
+        ```yaml
+        backend:
+          type: daytona
+          language: python
+        ```
+
     ``class``
         Any deepagents-compatible ``BackendProtocol`` loaded by qualified
         import path.  Constructor kwargs go in the ``kwargs`` mapping:
@@ -142,8 +151,8 @@ class BackendConfig(BaseModel):
         ```
     """
 
-    type: Literal["none", "filesystem", "aio_sandbox", "class"] = Field(
-        "none", description="Backend type: none (default), filesystem, aio_sandbox, or class"
+    type: Literal["none", "filesystem", "aio_sandbox", "daytona", "class"] = Field(
+        "none", description="Backend type: none (default), filesystem, aio_sandbox, daytona, or class"
     )
     root_dir: str | None = Field(None, description="Root directory for the filesystem backend")
     class_path: QualifiedClassName | None = Field(
@@ -557,6 +566,15 @@ async def create_backend(config: BackendConfig | None) -> BackendProtocol | None
         cfg_kwargs = {**config.kwargs, **config.extra_kwargs}
         sandbox_cfg = AioSandboxBackendConfig.model_validate(cfg_kwargs) if cfg_kwargs else AioSandboxBackendConfig()
         backend = AioSandboxBackend(config=sandbox_cfg)
+        await backend.start()
+        return backend
+
+    if config.type == "daytona":
+        from genai_tk.agents.langchain.daytona_backend import DaytonaBackend, DaytonaBackendConfig
+
+        cfg_kwargs = {**config.kwargs, **config.extra_kwargs}
+        daytona_cfg = DaytonaBackendConfig.model_validate(cfg_kwargs) if cfg_kwargs else DaytonaBackendConfig()
+        backend = DaytonaBackend(config=daytona_cfg)
         await backend.start()
         return backend
 

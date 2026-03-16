@@ -59,8 +59,16 @@ deepagent:
   # Each entry is displayed as  genai_tk:<entry>  in the switcher.
   # Examples: default, fast_model, gpt41mini@openai, claude3_haiku@anthropic
   switcher_models:
-    - gpt41mini@openrouter
-    - gpt_oss120@openrouter
+    - default
+    - fast_model
+    - smart_model
+    - coding_model
+    - reasoning_model
+    - pro_model
+    - open_reasoning
+    - open_coder
+    - claude
+    - gemini
 
   # ─── Agent Profiles ─────────────────────────────────────────────────────────
   profiles:

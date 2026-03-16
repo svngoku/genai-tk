@@ -3,7 +3,49 @@
 llm:
   models:
     default: gpt_oss120@openrouter
-    fake: parrot_local@fake 
+    fake: parrot_local@fake
+
+    # ── Curated role-based tags ─────────────────────────────────────────────
+    # Use these with --llm <tag> in any CLI command or profile config.
+    # Ordered by cost: nano < fast < smart < coding < reasoning < vision < pro
+
+    # Cheapest & fastest — quick classification, summaries, chat ($0.05/M in)
+    nano_model: openai/gpt-5-nano@openrouter
+
+    # Fast general-purpose — daily tasks, tool calling ($0.25/M in)
+    fast_model: openai/gpt-5-mini@openrouter
+
+    # Best quality/cost ratio — complex tasks, research, writing ($1.25/M in)
+    smart_model: openai/gpt-5.1@openrouter
+
+    # Coding specialist — code generation, debugging, refactoring ($1.25/M in)
+    coding_model: openai/gpt-5.1-codex@openrouter
+
+    # Deep reasoning / chain-of-thought — math, logic, planning ($1.10/M in)
+    reasoning_model: openai/o4-mini@openrouter
+
+    # Vision + multimodal — image analysis, charts, screenshots ($0.20/M in, 2M ctx)
+    vision_model: x-ai/grok-4.1-fast@openrouter
+
+    # Maximum capability — hardest problems, no cost constraint ($2.50/M in, 1M ctx)
+    pro_model: openai/gpt-5.4@openrouter
+
+    # ── Budget-friendly alternatives ────────────────────────────────────────
+    # Free tier (rate-limited, good for dev/testing)
+    free_model: openai/gpt-oss-120b:free@openrouter
+
+    # Best open-weight reasoning ($0.28/M in)
+    open_reasoning: deepseek/deepseek-v3.2@openrouter
+
+    # Best open-weight coder ($0.30/M in, 262K ctx)
+    open_coder: qwen/qwen3-coder@openrouter
+
+    # Anthropic best ($3/M in, 1M ctx)
+    claude: anthropic/claude-sonnet-4.6@openrouter
+
+    # Google best ($0.30/M in, 1M ctx)
+    gemini: google/gemini-3.1-flash-lite-preview@openrouter
+
   cache: sqlite
   cache_path: data/llm_cache/langchain.db
 

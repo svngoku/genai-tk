@@ -620,6 +620,8 @@ async def _run_single_shot(
     if profile.sandbox == "docker":
         _cleanup_stale_sandbox_containers()
 
+    from genai_tk.core.prompts import datetime_context
+
     with console.status("Loading deer-flow agent...", spinner="dots"):
         client = EmbeddedDeerFlowClient(config_path=config_path, model_name=model_name)
 
@@ -629,6 +631,9 @@ async def _run_single_shot(
     # pollute the LLM's conversation history.
     thread_id = _stable_thread_id()
     client.clear_thread(thread_id)
+
+    # Prepend current date/time so the model is temporally aware
+    user_input = f"[{datetime_context()}]\n\n{user_input}"
 
     await _stream_message(
         client=client,
@@ -780,7 +785,13 @@ async def _run_chat_mode(
     def _prompt_text() -> str:
         return f"[{current_mode}] >>> "
 
+    from genai_tk.core.prompts import datetime_context
+
+    _datetime_injected = False
+
     if initial_input:
+        initial_input = f"[{datetime_context()}]\n\n{initial_input}"
+        _datetime_injected = True
         console.print(Panel(initial_input, title="[bold blue]You[/bold blue]", border_style="blue"))
         await _stream_message(
             client,
@@ -873,6 +884,9 @@ async def _run_chat_mode(
             continue
 
         try:
+            if not _datetime_injected:
+                user_input = f"[{datetime_context()}]\n\n{user_input}"
+                _datetime_injected = True
             console.print(Panel(user_input, title="[bold blue]You[/bold blue]", border_style="blue"))
             await _stream_message(
                 client,

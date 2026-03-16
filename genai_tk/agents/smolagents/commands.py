@@ -128,12 +128,13 @@ def register(cli_app: typer.Typer) -> None:
                 return
 
             # Create agent with optional pre_prompt as instructions
+            from genai_tk.core.prompts import with_datetime_context
+
             agent_kwargs = {
                 "tools": available_tools,
                 "model": model,
                 "additional_authorized_imports": final_imports,
+                "instructions": with_datetime_context(final_pre_prompt),
             }
-            if final_pre_prompt:
-                agent_kwargs["instructions"] = final_pre_prompt
             agent = CodeAgent(**agent_kwargs)
             agent.run(input)

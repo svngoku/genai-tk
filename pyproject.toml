@@ -26,75 +26,129 @@ dependencies = [
     "langchain-core>=1.0",            # LangChain abstractions and base classes
     "langchain-classic>=1.0.0",       # Classic LangChain components
     "langchain-community>=0.4",       # Community-contributed integrations
-    "langchain-experimental>=0.0.42", # Experimental features and patterns
     "langgraph>=1.0",                 # Graph-based workflows and agent orchestration
-    "langserve>=0.3",                 # Deploy LangChain apps as REST APIs
-    "langchainhub>=0.1",              # Share and discover prompts/chains
+    "langgraph-checkpoint-sqlite>=3.0.3",
     # ============================================
-    # LLM Provider Integrations
+    # Default LLM Provider (OpenAI — most common)
     # ============================================
     "langchain-openai>=1.0",         # OpenAI models (GPT-4, GPT-3.5, etc.)
+    "openai>=1.80.0",                # Official OpenAI Python client
+]
+
+[project.optional-dependencies]
+# ============================================
+# LLM Provider Extras
+# ============================================
+providers = [
     "langchain-ollama>=1.0",         # Local Ollama models integration
     "langchain-deepseek>=1.0",       # DeepSeek models integration
     "langchain-mistralai>=1.0",      # Mistral AI models integration
     "langchain-groq>=1.0",           # Groq inference engine integration
     "langchain-litellm>=0.3.2",      # LiteLLM unified interface
-    "langchain-anthropic>=1.3.4",
-    "langchain-google-genai>=4.2.1",
-    "openai>=1.80.0",                # Official OpenAI Python client
+    "langchain-anthropic>=1.3.4",    # Anthropic Claude models
+    "langchain-google-genai>=4.2.1", # Google Gemini models
     "litellm>=1.74,<2",              # Unified LLM API (100+ models)
     "mistralai>=1.7.0",              # Official Mistral AI client
-    # ============================================
-    # Agent Frameworks
-    # ============================================
-    "smolagents[toolkit, mcp, openai, litellm, docker]>=1.17", # Lightweight agentic framework
-    "deepagents>=0.4",                                         # Deep agents with planning, subagents, skills
-    "langchain-mcp-adapters>=0.1",                             # Model Context Protocol adapters
-    "mcp[cli]>=1.4.1",                                         # Model Context Protocol core
-    # ============================================
-    # Vector Stores & Embeddings
-    # ============================================
+]
+
+# ============================================
+# LangChain Extended (experimental, hub, serve)
+# ============================================
+langchain-extra = [
+    "langchain-experimental>=0.0.42", # Experimental features and patterns
+    "langserve>=0.3",                 # Deploy LangChain apps as REST APIs
+    "langchainhub>=0.1",              # Share and discover prompts/chains
+]
+
+# ============================================
+# Agent Frameworks
+# ============================================
+agents = [
+    "smolagents[toolkit, mcp, openai, litellm, docker]>=1.17", # SmolAgents agentic framework
+    "deepagents>=0.4",                                         # Deep agents with planning and skills
+    "deepagents-cli>=0.0.26",                                  # Deep agents CLI
+    "agent-sandbox>=0.0.24",                                   # Docker sandbox for agents
+]
+
+# ============================================
+# MCP (Model Context Protocol)
+# ============================================
+mcp = [
+    "langchain-mcp-adapters>=0.1",  # MCP adapters for LangChain
+    "mcp[cli]>=1.4.1",             # Model Context Protocol core
+]
+
+# ============================================
+# RAG — Vector Stores & Embeddings
+# ============================================
+rag = [
     "chromadb>=1.0",         # Vector database for embeddings
     "langchain-chroma>=1.0", # LangChain integration for ChromaDB
-    # ============================================
-    # Knowledge Graphs & Structured Data
-    # ============================================
+    "bm25s>=0.2.13",         # Fast BM25 search with NumPy
+    "chonkie>=1.5.2",        # Text chunking and splitting library
+    "fuzzysearch>=0.8.0",    # Fuzzy string search
+]
+
+# ============================================
+# Knowledge Graphs & Structured Data
+# ============================================
+graph = [
     "baml-cli>=0.1.0",       # BAML CLI for structured data extraction
     "baml-lib>=0.42.0",      # BAML library for LLM-powered parsing
     "langchain-kuzu>=0.3.0", # LangChain integration for Kuzu graph DB
     "kuzu>=0.7.1",           # Embedded graph database
-    # ============================================
-    # NLP & Text Processing
-    # ============================================
-    "tokenizers>=0.21.0",                                                                                                                     #                                                                                                                    # Hugging Face tokenizers (for chonkie)
-    "spacy>=3.7.4",                                                                                                                           # Powerful NLP library                                                                                                                          # Industrial-strength NLP library
+]
+
+# ============================================
+# NLP & Text Processing
+# ============================================
+nlp = [
+    "tokenizers>=0.21.0",                                                                                                                     # Hugging Face tokenizers
+    "spacy>=3.7.4",                                                                                                                           # Industrial-strength NLP library
     "en-core-web-sm @https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl", # Small English model
     "en-core-web-lg @https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.8.0/en_core_web_lg-3.8.0-py3-none-any.whl", # Large English model with word vectors
     "abbreviations>=0.2.5",                                                                                                                   # Abbreviation detection and expansion
     "unidecode>=1.3.8",                                                                                                                       # ASCII transliteration of Unicode text
-    # ============================================
-    # Search & Retrieval
-    # ============================================
-    "bm25s>=0.2.13",         # Fast BM25 search with NumPy
-    "fuzzysearch>=0.8.0",    # Autonomous web research agent
+]
+
+# ============================================
+# Search Tools
+# ============================================
+search = [
     "tavily-python>=0.7.12", # Tavily search API client
     "ddgs>=9.7.0",           # DuckDuckGo search wrapper
-    #"gpt-researcher>=0.14.0", # Deep search; Requires cryptography>=45.0.2
-    # ============================================
-    # Document Processing
-    # ============================================
+    "jinaai>=0.2.10",        # Jina AI integration
+]
+
+# ============================================
+# Document Processing
+# ============================================
+docs = [
     "markitdown[pdf, docx, pptx]>=0.1.3", # Convert documents to markdown
-    "openpyxl>=3.1.5",                    # Excel file reading and writing
-    "chonkie>=1.5.2",                     # Text chunking and splitting library
-    # ============================================
-    # Workflow Orchestration
-    # ============================================
-    "prefect>=3.6.7",                     # Modern workflow orchestration
-    "jinaai>=0.2.10",
-    "langgraph-checkpoint-sqlite>=3.0.3",
-    "readabilipy>=0.3.0",
-    "agent-sandbox>=0.0.24",
-    "deepagents-cli>=0.0.26",
+    "openpyxl>=3.1.5",                     # Excel file reading and writing
+    "readabilipy>=0.3.0",                  # Readable content extraction
+]
+
+# ============================================
+# Workflow Orchestration
+# ============================================
+workflow = [
+    "prefect>=3.6.7",  # Modern workflow orchestration
+]
+
+# ============================================
+# Cloud Sandbox Providers (E2B, Daytona, Blaxel)
+# ============================================
+sandbox = [
+    "e2b-code-interpreter>=1.0",  # E2B cloud code execution sandbox
+    "daytona>=0.10",              # Daytona secure sandbox infrastructure
+]
+
+# ============================================
+# All — install everything
+# ============================================
+all = [
+    "genai-tk[providers,langchain-extra,agents,mcp,rag,graph,nlp,search,docs,workflow,sandbox]",
 ]
 
 [project.urls]
@@ -151,6 +205,13 @@ deer-flow = [
     # readabilipy is in main dependencies (required by deer-flow's Jina AI web_fetch tool)
 ]
 
+# Blaxel sandbox (separate group due to langgraph version conflict — blaxel requires <0.3)
+# Install with: uv sync --group blaxel
+# Note: blaxel.langgraph adapter may not work until blaxel supports langgraph>=1.0
+blaxel = [
+    "blaxel>=0.2",  # Blaxel sandbox infrastructure (MCP-based integration)
+]
+
 # Docker sandbox support for deer-flow (enables file creation, bash, code execution in container)
 # Requires Docker to be installed and running
 deer-flow-docker = [
@@ -171,6 +232,9 @@ dev = [
 
 [tool.uv]
 default-groups = ["dev", "postgres"]
+
+# For development, install all optional extras so nothing breaks:
+# uv sync --all-extras
 
 package = true
 

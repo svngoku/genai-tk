@@ -262,6 +262,19 @@ def register(cli_app: typer.Typer) -> None:
             run_langchain_agent_shell,
         )
 
+        # Suppress noisy "Event loop is closed" RuntimeErrors from MCP
+        # subprocess transports whose __del__ fires after asyncio.run()
+        # has already closed the loop.  This is harmless — the subprocess
+        # has already exited — but prints ugly tracebacks to stderr.
+        _orig_unraisablehook = sys.unraisablehook
+
+        def _quiet_unraisable(args: sys.UnraisableHookArgs) -> None:
+            if isinstance(args.exc_value, RuntimeError) and "Event loop is closed" in str(args.exc_value):
+                return
+            _orig_unraisablehook(args)
+
+        sys.unraisablehook = _quiet_unraisable
+
         try:
             if chat:
                 asyncio.run(
