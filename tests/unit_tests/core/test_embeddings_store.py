@@ -132,8 +132,70 @@ def test_vector_store_factory_known_items() -> None:
     assert "Chroma" in known_items
     assert "Sklearn" in known_items
     assert "PgVector" in known_items
+    assert "Zvec" in known_items
     # Ensure deprecated Chroma_in_memory is no longer in known items
     assert "Chroma_in_memory" not in known_items
+
+
+def test_zvec_vector_store_creation_and_search(sample_documents, tmp_path) -> None:
+    """Test Zvec vector store creation, document addition, and similarity search."""
+    pytest.importorskip("zvec")
+
+    from genai_tk.utils.config_mngr import global_config
+
+    global_config().set(
+        "embeddings_store.zvec_test",
+        {
+            "backend": "Zvec",
+            "embeddings": "fake",
+            "table_name_prefix": "zvec_test_embeddings",
+            "config": {
+                "storage": str(tmp_path / "zvec"),
+                "metric": "COSINE",
+                "optimize_on_add": True,
+            },
+        },
+    )
+
+    embeddings_store = EmbeddingsStore.create_from_config("zvec_test")
+    assert embeddings_store.backend == "Zvec"
+
+    db = embeddings_store.get_vector_store()
+    ids = db.add_documents(sample_documents)
+    assert len(ids) == len(sample_documents)
+
+    results = db.similarity_search("vector search", k=2)
+    assert len(results) == 2
+    assert all(isinstance(doc, Document) for doc in results)
+
+
+def test_zvec_vector_store_similarity_search_by_vector(sample_documents, tmp_path) -> None:
+    """Test Zvec similarity search using vector input."""
+    pytest.importorskip("zvec")
+
+    from genai_tk.utils.config_mngr import global_config
+
+    global_config().set(
+        "embeddings_store.zvec_vector_test",
+        {
+            "backend": "Zvec",
+            "embeddings": "fake",
+            "table_name_prefix": "zvec_vector_test_embeddings",
+            "config": {
+                "storage": str(tmp_path / "zvec"),
+            },
+        },
+    )
+
+    embeddings_store = EmbeddingsStore.create_from_config("zvec_vector_test")
+    db = embeddings_store.get_vector_store()
+    db.add_documents(sample_documents)
+
+    query_vector = embeddings_store.embeddings_factory.get().embed_query("programming language")
+    results = db.similarity_search_by_vector(query_vector, k=2)
+
+    assert len(results) == 2
+    assert all(isinstance(doc, Document) for doc in results)
 
 
 def test_vector_store_empty_search(fresh_embeddings_store) -> None:

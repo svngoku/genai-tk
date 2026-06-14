@@ -606,6 +606,8 @@ class RagCommands(CliTopCommand):
                             storage = "Memory"
                         elif backend == "PgVector":
                             storage = "Database"
+                        elif backend == "Zvec":
+                            storage = "Persistent"
                         else:
                             storage = "Unknown"
 

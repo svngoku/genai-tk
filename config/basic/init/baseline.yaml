@@ -89,6 +89,16 @@ embeddings_store:
     config:
       storage: ${paths.data_root}/vector_store  # Persistent storage on disk
   
+  zvec:
+    backend: Zvec
+    embeddings: default
+    table_name_prefix: embeddings
+    config:
+      storage: ${paths.data_root}/zvec
+      vector_field: embedding
+      metric: COSINE
+      optimize_on_add: true
+   
 
 
 # Key-Value Stores configuration

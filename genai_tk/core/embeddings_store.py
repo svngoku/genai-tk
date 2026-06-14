@@ -5,7 +5,7 @@ interacting with vector stores across multiple storage backends. It supports
 advanced document indexing, retrieval, and vector database operations.
 
 Key Features:
-- Multi-backend vector store support (Chroma, In-Memory, Sklearn, PgVector)
+- Multi-backend vector store support (Chroma, In-Memory, Sklearn, PgVector, Zvec)
 - Flexible document indexing and deduplication with SQLRecordManager
 - Configurable retrieval strategies and search parameters
 - Seamless integration with embedding models via EmbeddingsFactory
@@ -138,7 +138,7 @@ from genai_tk.utils.config_mngr import (
 )
 
 # List of known Vector Stores (created as Literal so can be checked by MyPy)
-VECTOR_STORE_ENGINE = Literal["Chroma", "InMemory", "Sklearn", "PgVector"]
+VECTOR_STORE_ENGINE = Literal["Chroma", "InMemory", "Sklearn", "PgVector", "Zvec"]
 
 
 class _EmbeddingsStoreConfig(BaseModel):
@@ -374,6 +374,8 @@ class EmbeddingsStore(BaseModel):
             )
         elif self.backend == "PgVector":
             vector_store = self._create_pg_vector_store()
+        elif self.backend == "Zvec":
+            vector_store = self._create_zvec_vector_store()
         else:
             raise ValueError(f"Unknown vector store: {self.backend}")
 
@@ -474,6 +476,17 @@ class EmbeddingsStore(BaseModel):
         from genai_tk.extra.pgvector_factory import create_pg_vector_store
 
         return create_pg_vector_store(
+            embeddings_factory=self.embeddings_factory,
+            table_name=self.table_name,
+            config=self.config,
+            conf=self._conf,
+        )
+
+    def _create_zvec_vector_store(self) -> VectorStore:
+        """Create and configure a Zvec store."""
+        from genai_tk.extra.zvec_factory import create_zvec_vector_store
+
+        return create_zvec_vector_store(
             embeddings_factory=self.embeddings_factory,
             table_name=self.table_name,
             config=self.config,
